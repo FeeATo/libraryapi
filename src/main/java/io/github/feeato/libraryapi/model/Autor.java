@@ -29,8 +29,8 @@ public class Autor {
     private String nacionalidade;
 
     //faz com que o JPA saiba q isso n é uma coluna mas eles tem relação
-    @OneToMany(mappedBy = "autor") //o mapperBy referencia o nome da propriedade na classe Livro que referencia o Autor
-    private List<Livro> livros;
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL) //o mapperBy referencia o nome da propriedade na classe Livro que referencia o Autor
+    private List<Livro> livros; //só vai salvar os filhos se tiver com CascadeType.PERSIST ou  ALL
 
     public Autor(String nome, String nacionalidade, LocalDate dataNascimento) {
         this.nome = nome;

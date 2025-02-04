@@ -1,10 +1,13 @@
 package io.github.feeato.libraryapi.repository;
 
 import io.github.feeato.libraryapi.model.Autor;
+import io.github.feeato.libraryapi.model.GeneroLivro;
+import io.github.feeato.libraryapi.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,7 @@ public class AutorRepositoryTest {
     @Test
     public void salvarTeste() {
         Autor autor = new Autor("Maria", "Brasileira", LocalDate.of(1951, 1, 31));
+        autor.setLivros(List.of(new Livro("192310293", "livro criado ao salvar Autor", LocalDate.now(), GeneroLivro.FICCAO, BigDecimal.TEN, autor)));
         autor = autorRepository.save(autor);
         System.out.println("Autor salvo: " + autor);
     }

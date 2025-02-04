@@ -41,7 +41,7 @@ public class Livro {
     //CascadeType.MERGE -> atualiza a entidade Pai também. Se não tiver ID, vai dar pau
     //CascadeType.PERSIST -> só salva a entidade Pai novamente, nada d+
     //CascadeType.ALL -> faz tudo
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Autor autor;
 
     public Livro(String isbn, String titulo, LocalDate dataPublicacao, GeneroLivro genero, BigDecimal preco, Autor autor) {
