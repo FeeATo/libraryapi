@@ -47,4 +47,9 @@ public class Autor {
                 ", id=" + id +
                 '}';
     }
+
+    public Autor setId(UUID id) {
+        this.id = id;
+        return this;
+    }
 }
