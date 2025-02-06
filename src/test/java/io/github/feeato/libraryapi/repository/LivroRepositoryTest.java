@@ -41,7 +41,7 @@ class LivroRepositoryTest {
     }
 
     @Test
-    @Transactional //ele busca todos as propriedades lazys dos objetos
+    @Transactional //ele busca todos as propriedades lazys dos objetos (jeito meio bosta)
     void buscarTodos() {
         livroRepository.findAll().forEach(l->{
             System.out.println("Livro: " + l.getTitulo());
@@ -52,6 +52,11 @@ class LivroRepositoryTest {
     @Test
     void buscarTodosComLivros() {
         livroRepository.findAll().forEach(System.out::println);
+    }
+
+    @Test
+    void buscarPorGenero() {
+        livroRepository.findByGenero(GeneroLivro.FICCAO).forEach(System.out::println);
     }
 
 }
