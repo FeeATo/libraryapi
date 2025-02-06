@@ -30,7 +30,7 @@ public class Autor {
 
     //faz com que o JPA saiba q isso n é uma coluna mas eles tem relação
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL) //o mapperBy referencia o nome da propriedade na classe Livro que referencia o Autor
-    private List<Livro> livros; //só vai salvar os filhos se tiver com CascadeType.PERSIST ou  ALL
+    private List<Livro> livros; //só vai salvar os filhos se tiver com CascadeType.PERSIST ou  ALL. Ele não busca os elementos quando chama uma Select
 
     public Autor(String nome, String nacionalidade, LocalDate dataNascimento) {
         this.nome = nome;
@@ -45,6 +45,16 @@ public class Autor {
                 ", dataNascimento=" + dataNascimento +
                 ", nome='" + nome + '\'' +
                 ", id=" + id +
+                '}';
+    }
+
+    public String toStringCompleto(){
+        return "Autor{" +
+                "nacionalidade='" + nacionalidade + '\'' +
+                ", dataNascimento=" + dataNascimento +
+                ", nome='" + nome + '\'' +
+                ", id=" + id +  '\'' +
+                ", livros=" + livros +
                 '}';
     }
 

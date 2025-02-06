@@ -50,6 +50,13 @@ public class AutorRepositoryTest {
     }
 
     @Test
+    public void listarTodosComLivros() {
+        List<Autor> autores = autorRepository.buscarAutoTodosComLivro();
+        autores.forEach(a-> System.out.println(a.toStringCompleto()));
+    }
+
+
+    @Test
     public void deleteAlgum() {
         Optional<Autor> algumAutor = autorRepository.findAll().stream().findAny();
         if (algumAutor.isPresent()) {
