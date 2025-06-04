@@ -7,13 +7,14 @@ public enum GeneroLivro {
     ROMANCE("ROMÂNCE"),
     BIOGRAFIA("BIOGRAFIA");
 
-    private String nome;
+    private final String nome;
 
     GeneroLivro(String nome) {
         this.nome = nome;
     }
 
-    public String getNome() {
+    @Override
+    public String toString() {
         return nome;
     }
 }

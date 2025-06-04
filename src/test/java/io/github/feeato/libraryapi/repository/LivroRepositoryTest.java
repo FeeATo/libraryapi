@@ -36,7 +36,7 @@ class LivroRepositoryTest {
                 LocalDate.of(2024, 11, 14),
                 GeneroLivro.FICCAO,
                 BigDecimal.valueOf(1000.50),
-                new Autor().setId(UUID.fromString("109adeb2-7a17-431f-8c4d-9dec90b806ef"))); //ISSO FUNCIONA!!!
+                new Autor().setId(UUID.fromString("681ef5e4-af31-4fbb-9d7a-4d4b4252b54c"))); //ISSO FUNCIONA!!!
         livroRepository.save(livro);
     }
 
@@ -58,5 +58,8 @@ class LivroRepositoryTest {
     void buscarPorGenero() {
         livroRepository.findByGenero(GeneroLivro.FICCAO).forEach(System.out::println);
     }
+
+    @Test
+    void deleteByGenero() {livroRepository.deleteByGenero(GeneroLivro.FICCAO);}
 
 }
