@@ -6,6 +6,7 @@ import io.github.feeato.libraryapi.model.dto.AutorDTO;
 import io.github.feeato.libraryapi.model.dto.ErroResposta;
 import io.github.feeato.libraryapi.model.entity.Autor;
 import io.github.feeato.libraryapi.service.AutorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,8 @@ public class AutoresController {
     private final AutorService autorService;
 
     @PostMapping
-    public ResponseEntity<Object> cadastrarAutor(@RequestBody AutorDTO autorDTO) { //ResponseEntity é um objeto que representa todos os dados que dá pra retornar em uma resposta HTTP
+    //o @Valid obriga que o objeto que chegue na controller seja validado com o spring validator
+    public ResponseEntity<Object> cadastrarAutor(@RequestBody @Valid AutorDTO autorDTO) { //ResponseEntity é um objeto que representa todos os dados que dá pra retornar em uma resposta HTTP
         try {
             Autor autor = autorService.salvarAutor(autorDTO);
 
@@ -73,7 +75,7 @@ public class AutoresController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Object> atualizarAutor(@PathVariable String id, @RequestBody AutorDTO autorDTO) {
+    public ResponseEntity<Object> atualizarAutor(@PathVariable String id, @RequestBody @Valid AutorDTO autorDTO) {
         try {
             Optional<AutorDTO> autorAtualizadoDTO = autorService.atualizarAutor(id, autorDTO);
             if (autorAtualizadoDTO.isPresent()) {

@@ -6,6 +6,7 @@ import io.github.feeato.libraryapi.repository.AutorRepository;
 import io.github.feeato.libraryapi.validator.AutorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +47,15 @@ public class AutorService {
 
     public AutorDTO[] buscarAutorComParametros(String nome, String nacionalidade) {
         //campos nulos são ignorados no Example
-        return autorRepository.findAll(Example.of(new Autor(nome, nacionalidade, null)))
+
+        ExampleMatcher mather = ExampleMatcher.matching()
+                .withIgnoreNullValues()
+//                .withIgnorePaths("id", "dataNascimento") //faz ignorar alguns campos do objeto que foi passado no example
+                .withIgnoreCase()
+//                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING) //valida se a string tem que ser conter algo ou começar e tals.
+                ;
+
+        return autorRepository.findAll(Example.of(new Autor(nome, nacionalidade, null), mather))
                 .stream()
                 .map(Autor::gerarAutorDTO)
                 .toArray(AutorDTO[]::new);
