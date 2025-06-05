@@ -1,9 +1,8 @@
 package io.github.feeato.libraryapi.repository;
 
-import io.github.feeato.libraryapi.model.Autor;
-import io.github.feeato.libraryapi.model.GeneroLivro;
-import io.github.feeato.libraryapi.model.Livro;
-import org.springframework.data.jpa.repository.EntityGraph;
+import io.github.feeato.libraryapi.model.entity.Autor;
+import io.github.feeato.libraryapi.model.entity.GeneroLivro;
+import io.github.feeato.libraryapi.model.entity.Livro;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

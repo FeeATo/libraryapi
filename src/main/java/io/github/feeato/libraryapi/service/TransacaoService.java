@@ -1,8 +1,8 @@
 package io.github.feeato.libraryapi.service;
 
-import io.github.feeato.libraryapi.model.Autor;
-import io.github.feeato.libraryapi.model.GeneroLivro;
-import io.github.feeato.libraryapi.model.Livro;
+import io.github.feeato.libraryapi.model.entity.Autor;
+import io.github.feeato.libraryapi.model.entity.GeneroLivro;
+import io.github.feeato.libraryapi.model.entity.Livro;
 import io.github.feeato.libraryapi.repository.AutorRepository;
 import io.github.feeato.libraryapi.repository.LivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;

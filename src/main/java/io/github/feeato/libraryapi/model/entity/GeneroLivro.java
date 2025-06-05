@@ -1,4 +1,4 @@
-package io.github.feeato.libraryapi.model;
+package io.github.feeato.libraryapi.model.entity;
 
 public enum GeneroLivro {
     FICCAO("FICÇÃO"),

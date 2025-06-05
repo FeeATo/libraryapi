@@ -1,8 +1,8 @@
 package io.github.feeato.libraryapi.repository;
 
-import io.github.feeato.libraryapi.model.Autor;
-import io.github.feeato.libraryapi.model.GeneroLivro;
-import io.github.feeato.libraryapi.model.Livro;
+import io.github.feeato.libraryapi.model.entity.Autor;
+import io.github.feeato.libraryapi.model.entity.GeneroLivro;
+import io.github.feeato.libraryapi.model.entity.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
