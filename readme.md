@@ -14,3 +14,5 @@ sudo docker ps -a
 
 #para que os containers se comuniquem, tem que criar uma network!
 docker network create  *nome_da_network*
+
+docker run -it --network xquote-network --rm mysql mysql -hxquote -uexample-user -p

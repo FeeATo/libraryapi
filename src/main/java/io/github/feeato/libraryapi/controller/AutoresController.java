@@ -33,9 +33,20 @@ public class AutoresController {
 
     @GetMapping("{id}")
     public ResponseEntity<AutorDTO> buscarAutor(@PathVariable String id) {
-        Optional<Autor> autor = autorService.buscarAutor(id);
+        Optional<AutorDTO> autor = autorService.buscarAutorDTO(id);
 
-        return autor.map(a->ResponseEntity.ok().body(a.gerarAutorDTO())).orElse(ResponseEntity.notFound().build());
+        return autor.map(a->ResponseEntity.ok().body(a)).orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> removerAutor(@PathVariable String id) {
+        Optional<AutorDTO> autor = autorService.removerAutor(id);
+
+        if (autor.isPresent()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

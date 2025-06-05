@@ -25,7 +25,20 @@ public class AutorService {
         return autorRepository.save(autor);
     }
 
+    public Optional<AutorDTO> buscarAutorDTO(String id) {
+        return buscarAutor(id).map(Autor::gerarAutorDTO);
+    }
+
     public Optional<Autor> buscarAutor(String id) {
         return autorRepository.findById(UUID.fromString(id));
+    }
+
+    @Transactional
+    public Optional<AutorDTO> removerAutor(String id) {
+        Optional<Autor> autor = buscarAutor(id);
+        if (autor.isPresent()) {
+            autorRepository.delete(autor.get());
+        }
+        return autor.map(Autor::gerarAutorDTO);
     }
 }
