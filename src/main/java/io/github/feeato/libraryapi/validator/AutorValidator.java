@@ -1,25 +1,29 @@
 package io.github.feeato.libraryapi.validator;
 
+import io.github.feeato.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import io.github.feeato.libraryapi.exceptions.RegistroDuplicadoException;
 import io.github.feeato.libraryapi.model.entity.Autor;
 import io.github.feeato.libraryapi.repository.AutorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor //cria um construtor com todos os argumentos OBRIGATÒRIOS (todos que são 'final')
 public class AutorValidator {
 
     private final AutorRepository autorRepository;
+    private final LivroValidator livroValidator;
 
-    public AutorValidator(AutorRepository autorRepository) {
-        this.autorRepository = autorRepository;
-    }
-
-    public void validar(Autor autor) {
+    public void validarPersistir(Autor autor) {
         if (existeAutorCadastrado(autor)) {
             throw new RegistroDuplicadoException("Autor já cadastrado");
         }
+    }
+
+    public void validarRemove(Autor autor) {
+        livroValidator.validarAutorRemover(autor);
     }
 
     private boolean existeAutorCadastrado(Autor autor) {

@@ -5,6 +5,7 @@ import io.github.feeato.libraryapi.model.entity.GeneroLivro;
 import io.github.feeato.libraryapi.model.entity.Livro;
 import io.github.feeato.libraryapi.repository.AutorRepository;
 import io.github.feeato.libraryapi.repository.LivroRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +17,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor //cria um construtor com todos os argumentos OBRIGATÒRIOS (todos que são 'final')
 public class TransacaoService {
 
-    @Autowired
-    private AutorRepository autorRepository;
-    @Autowired
-    private LivroRepository livroRepository;
+    private final AutorRepository autorRepository;
+    private final LivroRepository livroRepository;
 
     @Transactional
     public void salvarLivroComFoto() {

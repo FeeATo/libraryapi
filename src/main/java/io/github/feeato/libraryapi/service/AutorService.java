@@ -4,10 +4,8 @@ import io.github.feeato.libraryapi.model.dto.AutorDTO;
 import io.github.feeato.libraryapi.model.entity.Autor;
 import io.github.feeato.libraryapi.repository.AutorRepository;
 import io.github.feeato.libraryapi.validator.AutorValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,20 +13,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor //cria um construtor com todos os argumentos OBRIGATÒRIOS (todos que são 'final')
 public class AutorService {
 
     private final AutorRepository autorRepository;
     private final AutorValidator autorValidator;
 
-    public AutorService(AutorRepository autorRepository, AutorValidator autorValidator) {
-        this.autorRepository = autorRepository;
-        this.autorValidator = autorValidator;
-    }
-
     @Transactional
     public Autor salvarAutor(AutorDTO autorDTO) {
         Autor autor = autorDTO.gerarAutor();
-        autorValidator.validar(autor);
+        autorValidator.validarPersistir(autor);
         return autorRepository.save(autor);
     }
 
@@ -44,6 +38,7 @@ public class AutorService {
     public Optional<AutorDTO> removerAutor(String id) {
         Optional<Autor> autor = buscarAutor(id);
         if (autor.isPresent()) {
+            autorValidator.validarRemove(autor.get());
             autorRepository.delete(autor.get());
         }
         return autor.map(Autor::gerarAutorDTO);
@@ -63,7 +58,7 @@ public class AutorService {
 
         if (autorOp.isPresent()) {
             Autor autor = autorOp.get().atualizarCampos(autorDTO);
-            autorValidator.validar(autor);
+            autorValidator.validarPersistir(autor);
             autorRepository.save(autor);
             return Optional.of(autor.gerarAutorDTO());
         }

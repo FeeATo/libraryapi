@@ -1,10 +1,12 @@
 package io.github.feeato.libraryapi.controller;
 
+import io.github.feeato.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import io.github.feeato.libraryapi.exceptions.RegistroDuplicadoException;
 import io.github.feeato.libraryapi.model.dto.AutorDTO;
 import io.github.feeato.libraryapi.model.dto.ErroResposta;
 import io.github.feeato.libraryapi.model.entity.Autor;
 import io.github.feeato.libraryapi.service.AutorService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +17,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("autores")
+@RequiredArgsConstructor //cria um construtor com todos os argumentos OBRIGATÒRIOS (todos que são 'final')
 public class AutoresController {
 
-    @Autowired
-    private AutorService autorService;
+    private final AutorService autorService;
 
     @PostMapping
     public ResponseEntity<Object> cadastrarAutor(@RequestBody AutorDTO autorDTO) { //ResponseEntity é um objeto que representa todos os dados que dá pra retornar em uma resposta HTTP
@@ -47,13 +49,21 @@ public class AutoresController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> removerAutor(@PathVariable String id) {
-        Optional<AutorDTO> autor = autorService.removerAutor(id);
+    public ResponseEntity<Object> removerAutor(@PathVariable String id) {
+        try {
+            Optional<AutorDTO> autor = autorService.removerAutor(id);
 
-        if (autor.isPresent()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+            if (autor.isPresent()) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (OperacaoNaoPermitidaException ex) {
+            ErroResposta erroResposta = ErroResposta.conflito(ex.getMessage());
+            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
+        } catch (Exception ex) {
+            ErroResposta erroResposta = ErroResposta.erroGenerico(ex.getMessage());
+            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
         }
     }
 

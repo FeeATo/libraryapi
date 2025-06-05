@@ -51,7 +51,7 @@ public class AutorRepositoryTest {
 
     @Test
     public void listarTodosComLivros() {
-        List<Autor> autores = autorRepository.buscarAutoTodosComLivro();
+        List<Autor> autores = autorRepository.buscarAutoresTodosComLivro();
         autores.forEach(a-> System.out.println(a.toStringCompleto()));
     }
 

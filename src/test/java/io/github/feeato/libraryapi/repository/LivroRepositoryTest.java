@@ -32,11 +32,11 @@ class LivroRepositoryTest {
     @Test
     void salvarTesteComIdAutorValido() {
         Livro livro = new Livro("566161561",
-                "Livro com chave extrangeira do Autor mas sem buscar ele do banco diretamente",
+                "Livro com chave extrangeira",
                 LocalDate.of(2024, 11, 14),
                 GeneroLivro.FICCAO,
                 BigDecimal.valueOf(1000.50),
-                new Autor().setId(UUID.fromString("681ef5e4-af31-4fbb-9d7a-4d4b4252b54c"))); //ISSO FUNCIONA!!!
+                new Autor().setId(UUID.fromString("dc7e9f66-36dd-4b17-b7b9-187fd257c8a2"))); //ISSO FUNCIONA!!!
         livroRepository.save(livro);
     }
 

@@ -12,7 +12,10 @@ import java.util.UUID;
 public interface AutorRepository extends JpaRepository<Autor, UUID> {
 
     @Query("SELECT a from Autor a LEFT JOIN FETCH a.livros l")
-    List<Autor> buscarAutoTodosComLivro();
+    List<Autor> buscarAutoresTodosComLivro();
+
+    @Query("SELECT a from Autor a LEFT JOIN FETCH a.livros l WHERE a.id=?1")
+    Optional<Autor> buscarAutorPorIdComLivros(UUID id);
 
     List<Autor> findAutorsByNome(String nome);
 
