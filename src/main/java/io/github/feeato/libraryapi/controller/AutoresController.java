@@ -3,6 +3,7 @@ package io.github.feeato.libraryapi.controller;
 import io.github.feeato.libraryapi.model.dto.AutorDTO;
 import io.github.feeato.libraryapi.model.entity.Autor;
 import io.github.feeato.libraryapi.service.AutorService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,21 @@ public class AutoresController {
         Optional<AutorDTO> autor = autorService.removerAutor(id);
 
         if (autor.isPresent()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<AutorDTO[]> buscarAutores(@RequestParam(required = false) String nome, @RequestParam(required = false) String nacionalidade) {
+        return ResponseEntity.ok(autorService.buscarAutorComParametros(nome, nacionalidade));
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> atualizarAutor(@PathVariable String id, @RequestBody AutorDTO autorDTO) {
+        Optional<AutorDTO> autorAtualizadoDTO = autorService.atualizarAutor(id, autorDTO);
+        if (autorAtualizadoDTO.isPresent()) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
