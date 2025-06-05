@@ -3,6 +3,7 @@ package io.github.feeato.libraryapi.service;
 import io.github.feeato.libraryapi.model.dto.AutorDTO;
 import io.github.feeato.libraryapi.model.entity.Autor;
 import io.github.feeato.libraryapi.repository.AutorRepository;
+import io.github.feeato.libraryapi.validator.AutorValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -17,14 +18,17 @@ import java.util.UUID;
 public class AutorService {
 
     private final AutorRepository autorRepository;
+    private final AutorValidator autorValidator;
 
-    public AutorService(AutorRepository autorRepository) {
+    public AutorService(AutorRepository autorRepository, AutorValidator autorValidator) {
         this.autorRepository = autorRepository;
+        this.autorValidator = autorValidator;
     }
 
     @Transactional
     public Autor salvarAutor(AutorDTO autorDTO) {
         Autor autor = autorDTO.gerarAutor();
+        autorValidator.validar(autor);
         return autorRepository.save(autor);
     }
 
@@ -59,6 +63,7 @@ public class AutorService {
 
         if (autorOp.isPresent()) {
             Autor autor = autorOp.get().atualizarCampos(autorDTO);
+            autorValidator.validar(autor);
             autorRepository.save(autor);
             return Optional.of(autor.gerarAutorDTO());
         }
