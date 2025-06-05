@@ -48,6 +48,10 @@ public class Autor {
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL) //o mapperBy referencia o nome da propriedade na classe Livro que referencia o Autor
     private List<Livro> livros; //só vai salvar os filhos se tiver com CascadeType.PERSIST ou  ALL. Ele não busca os elementos quando chama uma Select
 
+    public Autor(UUID id) {
+        this.id = id;
+    }
+
     public Autor(String nome, String nacionalidade, LocalDate dataNascimento) {
         this.nome = nome;
         this.dataNascimento = dataNascimento;
@@ -79,7 +83,7 @@ public class Autor {
         return this;
     }
 
-    public AutorDTO gerarAutorDTO() {
+    public AutorDTO gerarDTO() {
         return new AutorDTO(this.id, this.nome, this.dataNascimento, this.nacionalidade);
     }
 

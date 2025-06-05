@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface LivroRepository extends JpaRepository<Livro, UUID> {
@@ -29,5 +30,10 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     void deleteByGenero(@Param("genero") GeneroLivro generoLivro);
 
     boolean existsByAutor(Autor autor);
+
+    Optional<Livro> findByIsbn(String isbn);
+
+    @Query("SELECT l FROM Livro l LEFT JOIN FETCH l.autor WHERE l.id=?1")
+    Optional<Livro> findByIdWithAutor(UUID id);
 
 }

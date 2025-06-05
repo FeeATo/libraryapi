@@ -27,12 +27,12 @@ public class AutoresController {
     //o @Valid obriga que o objeto que chegue na controller seja validado com o spring validator
     public ResponseEntity<Object> cadastrarAutor(@RequestBody @Valid AutorDTO autorDTO) { //ResponseEntity é um objeto que representa todos os dados que dá pra retornar em uma resposta HTTP
         try {
-            Autor autor = autorService.salvarAutor(autorDTO);
+            AutorDTO autorDTOSalvo = autorService.salvarAutor(autorDTO);
 
             URI location = ServletUriComponentsBuilder //isso aqui existe pra colocar um header no response com a localização do recurso criado
                     .fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(autor.getId()).toUri();
+                    .buildAndExpand(autorDTOSalvo.id()).toUri();
             return ResponseEntity.created(location).build();
         } catch (RegistroDuplicadoException ex) {
             ErroResposta erroResposta = ErroResposta.conflito(ex.getMessage());

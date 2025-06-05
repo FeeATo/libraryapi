@@ -21,28 +21,32 @@ public class AutorService {
     private final AutorValidator autorValidator;
 
     @Transactional
-    public Autor salvarAutor(AutorDTO autorDTO) {
+    public AutorDTO salvarAutor(AutorDTO autorDTO) {
         Autor autor = autorDTO.gerarAutor();
         autorValidator.validarPersistir(autor);
-        return autorRepository.save(autor);
+        return autorRepository.save(autor).gerarDTO();
     }
 
     public Optional<AutorDTO> buscarAutorDTO(String id) {
-        return buscarAutor(id).map(Autor::gerarAutorDTO);
+        return buscarAutorPorId(id).map(Autor::gerarDTO);
     }
 
-    public Optional<Autor> buscarAutor(String id) {
-        return autorRepository.findById(UUID.fromString(id));
+    public Optional<Autor> buscarAutorPorId(String id) {
+        return buscarAutorPorId(UUID.fromString(id));
+    }
+
+    public Optional<Autor> buscarAutorPorId(UUID id) {
+        return autorRepository.findById(id);
     }
 
     @Transactional
     public Optional<AutorDTO> removerAutor(String id) {
-        Optional<Autor> autor = buscarAutor(id);
+        Optional<Autor> autor = buscarAutorPorId(id);
         if (autor.isPresent()) {
             autorValidator.validarRemove(autor.get());
             autorRepository.delete(autor.get());
         }
-        return autor.map(Autor::gerarAutorDTO);
+        return autor.map(Autor::gerarDTO);
     }
 
     public AutorDTO[] buscarAutorComParametros(String nome, String nacionalidade) {
@@ -57,7 +61,7 @@ public class AutorService {
 
         return autorRepository.findAll(Example.of(new Autor(nome, nacionalidade, null), mather))
                 .stream()
-                .map(Autor::gerarAutorDTO)
+                .map(Autor::gerarDTO)
                 .toArray(AutorDTO[]::new);
     }
 
@@ -69,7 +73,7 @@ public class AutorService {
             Autor autor = autorOp.get().atualizarCampos(autorDTO);
             autorValidator.validarPersistir(autor);
             autorRepository.save(autor);
-            return Optional.of(autor.gerarAutorDTO());
+            return Optional.of(autor.gerarDTO());
         }
         return Optional.empty();
     }

@@ -1,18 +1,31 @@
 package io.github.feeato.libraryapi.model.entity;
 
+import io.github.feeato.libraryapi.model.dto.AutorDTO;
+import io.github.feeato.libraryapi.model.dto.LivroDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table
 @Data
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class) //diz ao spring que ele tem que colocar um listener nessa classe para tomar alguma ação toda vez que tiver alguma modificação, assim as annotations @CreatedDate e @LastModifiedDate vão funcionar
 public class Livro {
+
+
+    public static final int ISBN_LENGTH = 17;
+    public static final int TITULO_LENGTH = 150;
+    public static final int GENERO_LENGTH = 30;
+//    public static final int PRECO_LENGTH = 30;
 
     @Id
     @Column(name = "id")
@@ -42,6 +55,17 @@ public class Livro {
     @ManyToOne(fetch = FetchType.LAZY)
     private Autor autor;
 
+    @CreatedDate //faz com que o spring coloque uma data aqui toda vez que for criada uma entidade
+    @Column(name = "data_cadastro", nullable = false)
+    private LocalDateTime dataCadastro;
+
+    @LastModifiedDate //toda vez que eu fizer um update, o spring vai atualizar essa data aqui
+    @Column(name = "data_atualizacao", nullable = false)
+    private LocalDateTime dataAtualizacao;
+
+    @Column(name = "id_usuario")
+    private UUID usuario;
+
     public Livro(String isbn, String titulo, LocalDate dataPublicacao, GeneroLivro genero, BigDecimal preco, Autor autor) {
         this.isbn = isbn;
         this.titulo = titulo;
@@ -61,5 +85,13 @@ public class Livro {
                 ", isbn='" + isbn + '\'' +
                 ", id=" + id +
                 '}';
+    }
+
+    public LivroDTO gerarDTO() {
+        AutorDTO autorDTO = null;
+        if (this.autor != null) {
+            autorDTO = this.autor.gerarDTO();
+        }
+        return new LivroDTO(this.id, this.isbn, this.titulo, this.dataPublicacao, this.genero.toString(), this.preco, autorDTO);
     }
 }
