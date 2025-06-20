@@ -28,3 +28,4 @@ create table usuario(
     senha varchar(300) not null,
     roles varchar[]
 );
+alter table usuario add column email varchar(150);

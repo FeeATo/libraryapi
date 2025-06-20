@@ -18,12 +18,12 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     @Column
     private String login;
-
     @Column
     private String senha;
+    @Column
+    private String email;
 
     @Type(ListArrayType.class)
     @Column(name = "roles", columnDefinition = "varchar[]")
