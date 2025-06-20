@@ -1,6 +1,3 @@
-CURSO Spring Boot Expert: JPA, REST, JWT, OAuth2 com Docker e AWS
-
-
 # cria um container com a imagem do POSTGRES
 sudo docker run --name librarydb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library postgres:16.3
 
