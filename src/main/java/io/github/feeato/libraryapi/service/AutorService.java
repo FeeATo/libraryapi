@@ -1,6 +1,7 @@
 package io.github.feeato.libraryapi.service;
 
 import io.github.feeato.libraryapi.model.dto.AutorDTO;
+import io.github.feeato.libraryapi.model.dto.mapper.AutorMapper;
 import io.github.feeato.libraryapi.model.entity.Autor;
 import io.github.feeato.libraryapi.repository.AutorRepository;
 import io.github.feeato.libraryapi.validator.AutorValidator;
@@ -19,16 +20,17 @@ public class AutorService {
 
     private final AutorRepository autorRepository;
     private final AutorValidator autorValidator;
+    private final AutorMapper autorMapper;
 
     @Transactional
     public AutorDTO salvarAutor(AutorDTO autorDTO) {
-        Autor autor = autorDTO.gerarAutor();
+        Autor autor = autorMapper.toEntity(autorDTO);
         autorValidator.validarPersistir(autor);
-        return autorRepository.save(autor).gerarDTO();
+        return autorMapper.toDTO(autorRepository.save(autor));
     }
 
     public Optional<AutorDTO> buscarAutorDTO(String id) {
-        return buscarAutorPorId(id).map(Autor::gerarDTO);
+        return buscarAutorPorId(id).map(autorMapper::toDTO);
     }
 
     public Optional<Autor> buscarAutorPorId(String id) {
@@ -46,7 +48,7 @@ public class AutorService {
             autorValidator.validarRemove(autor.get());
             autorRepository.delete(autor.get());
         }
-        return autor.map(Autor::gerarDTO);
+        return autor.map(autorMapper::toDTO);
     }
 
     public AutorDTO[] buscarAutorComParametros(String nome, String nacionalidade) {
@@ -61,7 +63,7 @@ public class AutorService {
 
         return autorRepository.findAll(Example.of(new Autor(nome, nacionalidade, null), mather))
                 .stream()
-                .map(Autor::gerarDTO)
+                .map(autorMapper::toDTO)
                 .toArray(AutorDTO[]::new);
     }
 
@@ -73,7 +75,7 @@ public class AutorService {
             Autor autor = autorOp.get().atualizarCampos(autorDTO);
             autorValidator.validarPersistir(autor);
             autorRepository.save(autor);
-            return Optional.of(autor.gerarDTO());
+            return Optional.of(autorMapper.toDTO(autor));
         }
         return Optional.empty();
     }

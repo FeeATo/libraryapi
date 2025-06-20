@@ -16,8 +16,4 @@ public record AutorDTO(UUID id,
                        @NotNull(message = "campo obrigatório") @Past(message = "Data de nascimento não pode ser futura") LocalDate dataNascimento,
                        @NotBlank(message = "campo obrigatório") @Size(min = 4, max = 50, message = "Campo fora do tamanho máximo ou mínimo permitido") String nacionalidade) {
 
-    public Autor gerarAutor() {
-        return new Autor(nome, nacionalidade, dataNascimento);
-    }
-
 }

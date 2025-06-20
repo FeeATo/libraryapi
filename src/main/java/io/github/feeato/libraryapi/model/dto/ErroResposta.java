@@ -4,8 +4,10 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+/**
+ * Esta classe representa o formato do json retornado quando dá erro
+ * **/
 public record ErroResposta(Integer status, String mensagem, List<ErroCampo> erros) {
-
 
     public static ErroResposta erroGenerico(String mensagem) {
         return new ErroResposta(HttpStatus.BAD_REQUEST.value(), mensagem, List.of());

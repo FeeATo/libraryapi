@@ -83,10 +83,6 @@ public class Autor {
         return this;
     }
 
-    public AutorDTO gerarDTO() {
-        return new AutorDTO(this.id, this.nome, this.dataNascimento, this.nacionalidade);
-    }
-
     public Autor atualizarCampos(AutorDTO autorDTO) {
         this.setNome(autorDTO.nome());
         this.setNacionalidade(autorDTO.nacionalidade());

@@ -23,7 +23,4 @@ public record LivroDTO(UUID id,
                        @EnumValidator(enumClazz = GeneroLivro.class, message = "Valor não permitido") @NotBlank String genero,
                        BigDecimal preco,
                         AutorDTO autor) {
-    public Livro gerarLivro() {
-        return new Livro(isbn, titulo, dataPublicacao, GeneroLivro.valueOf(genero), preco, new Autor(autor.id()));
-    }
 }

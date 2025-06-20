@@ -86,12 +86,4 @@ public class Livro {
                 ", id=" + id +
                 '}';
     }
-
-    public LivroDTO gerarDTO() {
-        AutorDTO autorDTO = null;
-        if (this.autor != null) {
-            autorDTO = this.autor.gerarDTO();
-        }
-        return new LivroDTO(this.id, this.isbn, this.titulo, this.dataPublicacao, this.genero.toString(), this.preco, autorDTO);
-    }
 }

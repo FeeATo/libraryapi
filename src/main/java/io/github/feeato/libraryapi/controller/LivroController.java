@@ -1,42 +1,28 @@
 package io.github.feeato.libraryapi.controller;
 
-import io.github.feeato.libraryapi.exceptions.RegistroDuplicadoException;
-import io.github.feeato.libraryapi.exceptions.RegistroNaoEncontradoException;
-import io.github.feeato.libraryapi.model.dto.ErroResposta;
 import io.github.feeato.libraryapi.model.dto.LivroDTO;
+import io.github.feeato.libraryapi.model.entity.GeneroLivro;
 import io.github.feeato.libraryapi.service.LivroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("livros")
 @RequiredArgsConstructor //cria um construtor com todos os argumentos OBRIGATÒRIOS (todos que são 'final')
-public class LivroController {
+public class LivroController implements GenericController {
 
     private final LivroService livroService;
 
     @PostMapping
-    public ResponseEntity<Object> salvarLivro(@RequestBody @Valid LivroDTO livroDTO) {
-        try {
-            LivroDTO livroDTOSalvo = livroService.salvarLivro(livroDTO);
+    public ResponseEntity<Void> salvarLivro(@RequestBody @Valid LivroDTO livroDTO) {
+        LivroDTO livroDTOSalvo = livroService.salvarLivro(livroDTO);
 
-            URI location = ServletUriComponentsBuilder //isso aqui existe pra colocar um header no response com a localização do recurso criado
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(livroDTOSalvo.id()).toUri();
-
-            return ResponseEntity.created(location).build();
-        } catch (RegistroNaoEncontradoException ex) {
-            return montaResponseRegistroNaoEncontrado(ErroResposta.naoEncontrado(ex.getMessage()));
-        } catch (RegistroDuplicadoException ex) {
-            return montaResponseRegistroNaoEncontrado(ErroResposta.conflito(ex.getMessage()));
-        }
+        return ResponseEntity.created(gerarHeaderLocation(livroDTOSalvo.id())).build();
     }
 
 
@@ -47,18 +33,21 @@ public class LivroController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Object> removerLivro(@PathVariable String id) {
-        try {
-            livroService.removerLivro(id);
-            return ResponseEntity.noContent().build();
-        } catch (RegistroNaoEncontradoException ex) {
-            return montaResponseRegistroNaoEncontrado(ErroResposta.naoEncontrado(ex.getMessage()));
-        }
+    public ResponseEntity<Void> removerLivro(@PathVariable String id) {
+        livroService.removerLivro(id);
+        return ResponseEntity.noContent().build();
     }
 
-    private static ResponseEntity<Object> montaResponseRegistroNaoEncontrado(ErroResposta ex) {
-        ErroResposta erroResposta = ex;
-        return ResponseEntity.status(erroResposta.status()).body(erroResposta);
+    @GetMapping
+    public ResponseEntity<Page<LivroDTO>> removerLivro(@RequestParam(required = false) String isbn,
+                                                       @RequestParam(required = false) String titulo,
+                                                       @RequestParam(name = "nome-autor", required = false) String nomeAutor,
+                                                       @RequestParam(name = "genero", required = false) GeneroLivro generoLivro,
+                                                       @RequestParam(name = "ano-publicacao", required = false) Integer anoPublicacao,
+                                                       @RequestParam(defaultValue = "0") Integer pagina,
+                                                       @RequestParam(name = "tamanho-pagina", defaultValue = "10") Integer tamanhoPagina) {
+        return ResponseEntity.ok(livroService.pesquisar(isbn, titulo, nomeAutor, generoLivro, anoPublicacao, pagina, tamanhoPagina));
     }
+
 
 }

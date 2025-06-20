@@ -1,72 +1,39 @@
 package io.github.feeato.libraryapi.controller;
 
-import io.github.feeato.libraryapi.exceptions.OperacaoNaoPermitidaException;
-import io.github.feeato.libraryapi.exceptions.RegistroDuplicadoException;
 import io.github.feeato.libraryapi.model.dto.AutorDTO;
-import io.github.feeato.libraryapi.model.dto.ErroResposta;
-import io.github.feeato.libraryapi.model.entity.Autor;
 import io.github.feeato.libraryapi.service.AutorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("autores")
 @RequiredArgsConstructor //cria um construtor com todos os argumentos OBRIGATÒRIOS (todos que são 'final')
-public class AutoresController {
+public class AutoresController implements GenericController {
 
     private final AutorService autorService;
 
     @PostMapping
     //o @Valid obriga que o objeto que chegue na controller seja validado com o spring validator
     public ResponseEntity<Object> cadastrarAutor(@RequestBody @Valid AutorDTO autorDTO) { //ResponseEntity é um objeto que representa todos os dados que dá pra retornar em uma resposta HTTP
-        try {
-            AutorDTO autorDTOSalvo = autorService.salvarAutor(autorDTO);
-
-            URI location = ServletUriComponentsBuilder //isso aqui existe pra colocar um header no response com a localização do recurso criado
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(autorDTOSalvo.id()).toUri();
-            return ResponseEntity.created(location).build();
-        } catch (RegistroDuplicadoException ex) {
-            ErroResposta erroResposta = ErroResposta.conflito(ex.getMessage());
-            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
-        } catch (Exception ex) {
-            ErroResposta erroResposta = ErroResposta.erroGenerico(ex.getMessage());
-            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
-        }
+        AutorDTO autorDTOSalvo = autorService.salvarAutor(autorDTO);
+        return ResponseEntity.created(gerarHeaderLocation(autorDTOSalvo.id())).build();
     }
 
     @GetMapping("{id}")
     public ResponseEntity<AutorDTO> buscarAutor(@PathVariable String id) {
-        Optional<AutorDTO> autor = autorService.buscarAutorDTO(id);
-
-        return autor.map(a->ResponseEntity.ok().body(a)).orElse(ResponseEntity.notFound().build());
+        return autorService
+                .buscarAutorDTO(id)
+                .map(a -> ResponseEntity.ok().body(a))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Object> removerAutor(@PathVariable String id) {
-        try {
-            Optional<AutorDTO> autor = autorService.removerAutor(id);
-
-            if (autor.isPresent()) {
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (OperacaoNaoPermitidaException ex) {
-            ErroResposta erroResposta = ErroResposta.conflito(ex.getMessage());
-            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
-        } catch (Exception ex) {
-            ErroResposta erroResposta = ErroResposta.erroGenerico(ex.getMessage());
-            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
-        }
+        return autorService.removerAutor(id)
+                .map(a -> ResponseEntity.noContent().build())
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
@@ -76,20 +43,19 @@ public class AutoresController {
 
     @PutMapping("{id}")
     public ResponseEntity<Object> atualizarAutor(@PathVariable String id, @RequestBody @Valid AutorDTO autorDTO) {
-        try {
-            Optional<AutorDTO> autorAtualizadoDTO = autorService.atualizarAutor(id, autorDTO);
-            if (autorAtualizadoDTO.isPresent()) {
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (RegistroDuplicadoException ex) {
-            ErroResposta erroResposta = ErroResposta.conflito(ex.getMessage());
-            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
-        } catch (Exception ex) {
-            ErroResposta erroResposta = ErroResposta.erroGenerico(ex.getMessage());
-            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
-        }
+//        try {
+        return autorService.atualizarAutor(id, autorDTO)
+                .map(autor -> ResponseEntity.noContent().build())
+                .orElse(ResponseEntity.notFound().build());
+//        } catch (RegistroDuplicadoException ex) {
+//            ErroResposta erroResposta = ErroResposta.conflito(ex.getMessage());
+//            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
+//        } catch (Exception ex) {
+//            ErroResposta erroResposta = ErroResposta.erroGenerico(ex.getMessage());
+//            return ResponseEntity.status(erroResposta.status()).body(erroResposta);
+//        }
+
+        //NAO PRECISA DESSAS EXCEPTIONS PORQUE TEM O EXCEPTION HANDLER (CLASSE GlobalExceptionHandler)
     }
 
 }
