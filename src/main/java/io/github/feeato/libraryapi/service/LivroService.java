@@ -7,6 +7,7 @@ import io.github.feeato.libraryapi.model.entity.Autor;
 import io.github.feeato.libraryapi.model.entity.GeneroLivro;
 import io.github.feeato.libraryapi.model.entity.Livro;
 import io.github.feeato.libraryapi.repository.LivroRepository;
+import io.github.feeato.libraryapi.security.SecurityService;
 import io.github.feeato.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,12 +32,13 @@ public class LivroService {
     private final AutorService autorService;
     private final LivroValidator livroValidator;
     private final LivroMapper livroMapper;
+    private final SecurityService securityService;
 
 
     @Transactional
     public LivroDTO salvarLivro(LivroDTO livroDTO) {
         Livro livro = livroMapper.toEntity(livroDTO);
-
+        livro.setUsuario(securityService.obterUsuarioLogado());
         if (livro.getAutor() != null) {
             Optional<Autor> autor = autorService.buscarAutorPorId(livro.getAutor().getId());
             if (autor.isPresent()) {

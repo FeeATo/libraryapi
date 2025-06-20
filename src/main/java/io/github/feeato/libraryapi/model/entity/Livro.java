@@ -63,8 +63,9 @@ public class Livro {
     @Column(name = "data_atualizacao", nullable = false)
     private LocalDateTime dataAtualizacao;
 
-    @Column(name = "id_usuario")
-    private UUID usuario;
+    @JoinColumn(name = "id_usuario")
+    @ManyToOne(fetch =  FetchType.LAZY)
+    private Usuario usuario;
 
     public Livro(String isbn, String titulo, LocalDate dataPublicacao, GeneroLivro genero, BigDecimal preco, Autor autor) {
         this.isbn = isbn;

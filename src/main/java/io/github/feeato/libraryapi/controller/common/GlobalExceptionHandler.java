@@ -9,6 +9,7 @@ import io.github.feeato.libraryapi.model.dto.ErroResposta;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,6 +42,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErroResposta> handleException(Exception ex) {
         return montaResponseEntity(ErroResposta.erroGenerico(ex.getMessage()));
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<ErroResposta> handleException(AuthorizationDeniedException ex) {
+        return montaResponseEntity(new ErroResposta(HttpStatus.FORBIDDEN.value(), "Usuário não tem permissão para executar esta ação", null));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

@@ -2,9 +2,13 @@ package io.github.feeato.libraryapi.controller;
 
 import io.github.feeato.libraryapi.model.dto.AutorDTO;
 import io.github.feeato.libraryapi.service.AutorService;
+import io.github.feeato.libraryapi.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +20,9 @@ public class AutoresController implements GenericController {
 
     @PostMapping
     //o @Valid obriga que o objeto que chegue na controller seja validado com o spring validator
-    public ResponseEntity<Object> cadastrarAutor(@RequestBody @Valid AutorDTO autorDTO) { //ResponseEntity é um objeto que representa todos os dados que dá pra retornar em uma resposta HTTP
-        AutorDTO autorDTOSalvo = autorService.salvarAutor(autorDTO);
+    @PreAuthorize("hasRole('GERENTE')")
+    public ResponseEntity<Object> cadastrarAutor(@RequestBody @Valid AutorDTO autorDTO/*, Authentication authentication*/) { //ResponseEntity é um objeto que representa todos os dados que dá pra retornar em uma resposta HTTP
+        AutorDTO autorDTOSalvo = autorService.salvarAutor(autorDTO/*, authentication*/);
         return ResponseEntity.created(gerarHeaderLocation(autorDTOSalvo.id())).build();
     }
 
@@ -30,6 +35,7 @@ public class AutoresController implements GenericController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Object> removerAutor(@PathVariable String id) {
         return autorService.removerAutor(id)
                 .map(a -> ResponseEntity.noContent().build())
@@ -42,6 +48,7 @@ public class AutoresController implements GenericController {
     }
 
     @PutMapping("{id}")
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Object> atualizarAutor(@PathVariable String id, @RequestBody @Valid AutorDTO autorDTO) {
 //        try {
         return autorService.atualizarAutor(id, autorDTO)

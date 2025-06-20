@@ -41,8 +41,9 @@ public class Autor {
     @Column(name = "data_atualizacao", nullable = false)
     private LocalDateTime dataAtualizacao;
 
-    @Column(name = "id_usuario")
-    private UUID usuario;
+    @JoinColumn(name = "id_usuario")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuario usuario;
 
     //faz com que o JPA saiba q isso n é uma coluna mas eles tem relação
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL) //o mapperBy referencia o nome da propriedade na classe Livro que referencia o Autor

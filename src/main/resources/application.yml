@@ -1,4 +1,3 @@
-
 spring:
   application:
     name: libraryapi
@@ -12,6 +11,11 @@ spring:
     hibernate:
 #      ddl-auto: update #só usar isso pra estudo
       ddl-auto: none
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
 server:
   servlet:
     context-path: /libraryapi

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
 
     /*Esse cara aqui vai sobreescrever o SecurityFilterChain padrão (que gera o formulariozinho no browser ou o que gera a senha e usa a autenticação basic*/
@@ -27,16 +29,17 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
 //                .formLogin(configurer->configurer.loginPage("/login.html").successForwardUrl()) //isso aqui define uma página customizada de login
-//                .formLogin(Customizer.withDefaults()) //habilita o formulário de login javascript lá no navegador
-                .httpBasic(Customizer.withDefaults()) //habilita a autenticação basic
+                .formLogin(Customizer.withDefaults()) //habilita o formulário de login javascript lá no navegador
+//                .httpBasic(Customizer.withDefaults()) //habilita a autenticação basic
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/login").permitAll();
+                    authorize.requestMatchers("/login/**").permitAll();
                     authorize.requestMatchers(HttpMethod.POST,"/usuarios/**").permitAll();
 //                    authorize.requestMatchers(HttpMethod.POST, "/autores").hasRole("ADMIN"); //dá pra fazer isso também
-                    authorize.requestMatchers( "/autores/**").hasRole("ADMIN");
-                    authorize.requestMatchers("/livros/**").hasAnyRole("TECNICO", "ADMIN");
+//                    authorize.requestMatchers( "/autores/**").hasRole("ADMIN");
+//                    authorize.requestMatchers("/livros/**").hasAnyRole("TECNICO", "ADMIN");
                     authorize.anyRequest().authenticated();
                 })
+                .oauth2Login(Customizer.withDefaults())
                 .build();
     }
 

@@ -3,11 +3,15 @@ package io.github.feeato.libraryapi.service;
 import io.github.feeato.libraryapi.model.dto.AutorDTO;
 import io.github.feeato.libraryapi.model.dto.mapper.AutorMapper;
 import io.github.feeato.libraryapi.model.entity.Autor;
+import io.github.feeato.libraryapi.model.entity.Usuario;
 import io.github.feeato.libraryapi.repository.AutorRepository;
+import io.github.feeato.libraryapi.security.SecurityService;
 import io.github.feeato.libraryapi.validator.AutorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +24,14 @@ public class AutorService {
 
     private final AutorRepository autorRepository;
     private final AutorValidator autorValidator;
+    private final SecurityService securityService;
     private final AutorMapper autorMapper;
 
     @Transactional
     public AutorDTO salvarAutor(AutorDTO autorDTO) {
+        Usuario usuario = securityService.obterUsuarioLogado();
         Autor autor = autorMapper.toEntity(autorDTO);
+        autor.setUsuario(usuario);
         autorValidator.validarPersistir(autor);
         return autorMapper.toDTO(autorRepository.save(autor));
     }
