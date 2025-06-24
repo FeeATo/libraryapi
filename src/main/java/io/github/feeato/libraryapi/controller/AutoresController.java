@@ -24,6 +24,8 @@ public class AutoresController implements GenericController {
     //o @Valid obriga que o objeto que chegue na controller seja validado com o spring validator
     @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Object> cadastrarAutor(@RequestBody @Valid AutorDTO autorDTO/*, Authentication authentication*/) { //ResponseEntity é um objeto que representa todos os dados que dá pra retornar em uma resposta HTTP
+        log.info("Cadastrando Autor: {} com nome: {}", autorDTO, autorDTO.nome());
+
         AutorDTO autorDTOSalvo = autorService.salvarAutor(autorDTO/*, authentication*/);
         return ResponseEntity.created(gerarHeaderLocation(autorDTOSalvo.id())).build();
     }
