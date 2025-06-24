@@ -18,6 +18,22 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT_ID}
             client-secret: ${GOOGLE_CLIENT_LINUX}
+logging:
+  file:
+    #esse cara coloca os logs do console no arquivo app.log
+    name: app.log
+  level:
+    #Esses são os níveis de log, do mais abrangente para o mais restritivo: trace; debug; info; warn; error.
+    root: warn
+    org: #esse aqui org.springframework.web é o pacote, nesse caso o nível de log dele será debug
+      springframework:
+        web: debug
+        security: trace
+    io:
+      github:
+        feeato:
+          libraryapi:
+            controller: trace
 server:
   servlet:
     context-path: /libraryapi

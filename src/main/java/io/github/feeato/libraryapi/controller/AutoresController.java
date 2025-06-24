@@ -5,6 +5,7 @@ import io.github.feeato.libraryapi.service.AutorService;
 import io.github.feeato.libraryapi.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("autores")
 @RequiredArgsConstructor //cria um construtor com todos os argumentos OBRIGATÒRIOS (todos que são 'final')
+@Slf4j //esse cara coloca um objeto de log customizável
 public class AutoresController implements GenericController {
 
     private final AutorService autorService;
@@ -43,7 +45,15 @@ public class AutoresController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<AutorDTO[]> buscarAutores(@RequestParam(required = false) String nome, @RequestParam(required = false) String nacionalidade) {
+    public ResponseEntity<AutorDTO[]> buscarAutores(@RequestParam(required = false) String nome,
+                                                    @RequestParam(required = false) String nacionalidade) {
+
+        log.trace("Adicionando um log de nível trace");
+        log.info("Adicionando um log de nível info");
+        log.debug("Adicionando um log de nível debug");
+        log.warn("Adicionando um log de nível warn");
+        log.error("Adicionando um log de nível error");
+
         return ResponseEntity.ok(autorService.buscarAutorComParametros(nome, nacionalidade));
     }
 

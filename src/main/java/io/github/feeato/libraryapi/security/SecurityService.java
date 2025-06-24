@@ -16,7 +16,8 @@ public class SecurityService {
 
     public Usuario obterUsuarioLogado() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return ((CustomAuthentication) authentication.getPrincipal()).getUsuario(); //esse cara é um CustomAuthentication por causa da classe CustomAuthenticationProvider
+//        return ((CustomAuthentication) authentication.getPrincipal()).getUsuario(); //esse cara é um CustomAuthentication por causa da classe CustomAuthenticationProvider
+        return (Usuario) authentication.getPrincipal(); //esse cara é um CustomAuthentication por causa da classe CustomAuthenticationProvider
     }
 
 }
