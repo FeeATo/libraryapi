@@ -32,7 +32,7 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
 //                .formLogin(configurer->configurer.loginPage("/login.html").successForwardUrl()) //isso aqui define uma página customizada de login
-//                .formLogin(Customizer.withDefaults()) //habilita o formulário de login javascript lá no navegador
+                .formLogin(Customizer.withDefaults()) //habilita o formulário de login javascript lá no navegador
                 .httpBasic(Customizer.withDefaults()) //habilita a autenticação basic
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();

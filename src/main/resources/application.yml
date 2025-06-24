@@ -34,6 +34,13 @@ logging:
         feeato:
           libraryapi:
             controller: trace
+management:
+  server:
+    port: 9090
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 server:
   servlet:
     context-path: /libraryapi
