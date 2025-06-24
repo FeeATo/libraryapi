@@ -1,39 +1,109 @@
-create table autor(
-	id uuid not null primary key,
-	nome varchar(100) not null,
-	data_nascimento date not null,
-	nacionalidade varchar(50) not null,
-	data_cadastro timestamp,
-	data_atualizacao timestamp,
-	id_usuario uuid
+--
+-- Name: autor; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.autor (
+    id uuid NOT NULL,
+    nome character varying(100) NOT NULL,
+    data_nascimento date NOT NULL,
+    nacionalidade character varying(50) NOT NULL,
+    data_cadastro timestamp without time zone,
+    data_atualizacao timestamp without time zone,
+    id_usuario uuid
 );
 
-create table livro(
-	id uuid not null primary key,
-	isbn varchar(20) not null,
-	titulo varchar(50) not null,
-	data_publicacao date not null,
-	genero varchar(30) not null,
-	preco numeric(18,2),
-	id_autor uuid not null references autor(id),
-	data_cadastro timestamp,
-    data_atualizacao timestamp,
+--
+-- Name: client; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.client (
+    id uuid NOT NULL,
+    client_id character varying(150) NOT NULL,
+    client_secret character varying(400) NOT NULL,
+    redirect_uri character varying(200) NOT NULL,
+    scope character varying(50)
+);
+
+
+--
+-- Name: livro; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.livro (
+    id uuid NOT NULL,
+    isbn character varying(20) NOT NULL,
+    titulo character varying(50) NOT NULL,
+    data_publicacao date NOT NULL,
+    genero character varying(30) NOT NULL,
+    preco numeric(18,2),
+    id_autor uuid NOT NULL,
+    data_cadastro timestamp without time zone,
+    data_atualizacao timestamp without time zone,
     id_usuario uuid,
-	constraint chk_genero check (genero in ('FICCAO', 'FANTASIA', 'MISTERIO', 'ROMANCE', 'BIOGRAFIA'))
+    CONSTRAINT chk_genero CHECK (((genero)::text = ANY ((ARRAY['FICCAO'::character varying, 'FANTASIA'::character varying, 'MISTERIO'::character varying, 'ROMANCE'::character varying, 'BIOGRAFIA'::character varying])::text[])))
 );
 
-create table usuario(
-    id uuid not null primary key,
-    login varchar(20) not null unique,
-    senha varchar(300) not null,
-    roles varchar[]
-);
-alter table usuario add column email varchar(150);
+--
+-- Name: usuario; Type: TABLE; Schema: public; Owner: postgres
+--
 
-CREATE TABLE client(
-	id uuid not null primary key,
-	client_id varchar(150) not null,
-	client_secret varchar(400) not null,
-	redirect_uri varchar(200) not null,
-	scope varchar(50)
+CREATE TABLE public.usuario (
+    id uuid NOT NULL,
+    login character varying(20) NOT NULL,
+    senha character varying(300) NOT NULL,
+    roles character varying[],
+    email character varying(150)
 );
+
+
+--
+-- Name: autor autor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.autor
+    ADD CONSTRAINT autor_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: client client_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.client
+    ADD CONSTRAINT client_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: livro livro_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.livro
+    ADD CONSTRAINT livro_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: usuario usuario_login_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuario
+    ADD CONSTRAINT usuario_login_key UNIQUE (login);
+
+
+--
+-- Name: usuario usuario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.usuario
+    ADD CONSTRAINT usuario_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: livro livro_id_autor_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.livro
+    ADD CONSTRAINT livro_id_autor_fkey FOREIGN KEY (id_autor) REFERENCES public.autor(id);
+
+
+--
+-- PostgreSQL database dump complete
+--

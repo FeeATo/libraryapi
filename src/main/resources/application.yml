@@ -1,12 +1,13 @@
 spring:
   application:
     name: libraryapi
-  profiles:
-    active: production
+#  profiles: esse cara está comentado porque estamos usando variável de ambiente
+#    active: production
   datasource:
-    url: jdbc:postgresql://localhost:5432/library
-    username: postgres
-    password: postgres
+    #quer dizer que se não vier variável de ambiente, vai colocar o valor padrão dps dos dois pontos
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/library}
+    username: ${DATASOURCE_USERNAME:postgres}
+    password: ${DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true
@@ -26,7 +27,7 @@ logging:
     name: app.log
   level:
     #Esses são os níveis de log, do mais abrangente para o mais restritivo: trace; debug; info; warn; error.
-    root: warn
+#    root: warn
     org: #esse aqui org.springframework.web é o pacote, nesse caso o nível de log dele será debug
       springframework:
         web: debug
@@ -47,3 +48,17 @@ server:
   servlet:
     context-path: /libraryapi
 #  port: 8080
+
+
+
+# Esse cara a seguir faz com que todos os profiles fiquem em um mesmo arquivo.
+
+############
+# production
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+  jpa:
+    show-sql: false
